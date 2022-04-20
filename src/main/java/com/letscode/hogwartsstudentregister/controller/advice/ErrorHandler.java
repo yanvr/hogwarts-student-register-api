@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ErrorHandler {
 
     private final MessageSource messageSource;
+    private static final String ZONE_ID = "America/Sao_Paulo";
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,7 +35,7 @@ public class ErrorHandler {
             ExceptionResponse exceptionResponse = new ExceptionResponse(
                     fieldError.getField(),
                     message,
-                    LocalDateTime.now(ZoneId.of("America/Sao_Paulo"))
+                    LocalDateTime.now(ZoneId.of(ZONE_ID))
             );
             errors.add(exceptionResponse);
         });
@@ -46,7 +48,17 @@ public class ErrorHandler {
        return new ExceptionResponse(
                "Student not found",
                e.getMessage(),
-               LocalDateTime.now(ZoneId.of("America/Sao_Paulo"))
+               LocalDateTime.now(ZoneId.of(ZONE_ID))
        );
+    }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ExceptionResponse httpClientErrorExcpetionHandler(HttpClientErrorException e) {
+        return new ExceptionResponse(
+                "Service is unavailable",
+                e.getMessage(),
+                LocalDateTime.now(ZoneId.of(ZONE_ID))
+        );
     }
 }

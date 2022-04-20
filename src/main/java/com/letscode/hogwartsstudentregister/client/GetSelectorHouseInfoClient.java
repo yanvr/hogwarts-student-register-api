@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
@@ -29,7 +30,9 @@ public class GetSelectorHouseInfoClient {
                 key
         );
 
-        if (response.getStatusCode().isError()) return null;
+        if (response.getStatusCode().isError()) {
+            throw new HttpClientErrorException(response.getStatusCode());
+        }
 
         return response.getBody();
     }

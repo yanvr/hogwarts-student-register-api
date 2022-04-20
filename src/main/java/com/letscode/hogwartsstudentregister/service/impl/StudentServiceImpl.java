@@ -5,6 +5,7 @@ import com.letscode.hogwartsstudentregister.client.GetSelectorHouseKeyClient;
 import com.letscode.hogwartsstudentregister.dto.StudentRequest;
 import com.letscode.hogwartsstudentregister.dto.StudentResponse;
 import com.letscode.hogwartsstudentregister.dto.clients.HouseInfo;
+import com.letscode.hogwartsstudentregister.exception.StudentNotFoundException;
 import com.letscode.hogwartsstudentregister.model.Student;
 import com.letscode.hogwartsstudentregister.repository.StudentRepository;
 import com.letscode.hogwartsstudentregister.service.StudentService;
@@ -37,7 +38,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse findById(Long id) {
-        Student student = studentRepository.findById(id).orElseThrow();
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
 
         HouseInfo houseInfo = getSelectorHouseInfoClient.execute(student.getSelectorHouseKey());
 
