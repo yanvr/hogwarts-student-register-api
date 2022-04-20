@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "client.hogwarts.key.generator.url",
+      "type": "java.lang.String",
+      "description": "Description for client.hogwarts.key.generator.url."
+  }
+] }
